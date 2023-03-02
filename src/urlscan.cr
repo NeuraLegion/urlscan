@@ -63,4 +63,4 @@ har.entries << HAR::Entry.new(
   ),
 )
 
-print har.to_json
+print HAR::Data.new(log: har).to_json
