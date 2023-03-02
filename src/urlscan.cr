@@ -36,25 +36,47 @@ if url.empty?
   exit(1)
 end
 
-request = HTTP::Request.new(
+har_request = HAR::Request.new(
+  url: url,
   method: method,
-  resource: url,
-  body: body,
-  headers: headers
+  http_version: "HTTP/1.1"
 )
 
-resp = HTTP::Client.exec(
+har_request.headers << HAR::Header.new(name: "Host", value: URI.parse(url).authority.to_s)
+
+headers.each do |k, v|
+  har_request.headers << HAR::Header.new(name: k, value: v.first)
+end
+
+unless body.empty?
+  har_request.post_data = HAR::PostData.new(
+    text: body,
+    mime_type: headers["Content-Type"]? || ""
+  )
+end
+
+response = HTTP::Client.exec(
   method: method,
   url: url,
   headers: headers.empty? ? nil : headers,
   body: body.empty? ? nil : body
 )
 
+har_response = HAR::Response.new(
+  status: response.status_code,
+  status_text: HTTP::Status.new(response.status_code).description.to_s,
+  http_version: "HTTP/1.1",
+  content: HAR::Content.new(
+    text: response.body || "",
+    size: 0
+  ),
+  redirect_url: "",
+)
 
 har = HAR::Log.new
 har.entries << HAR::Entry.new(
-  request: HAR::Request.new(request),
-  response: HAR::Response.new(resp),
+  request: har_request,
+  response: har_response,
   time: 0.0,
   timings: HAR::Timings.new(
     send: 0.0,
