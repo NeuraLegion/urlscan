@@ -9,6 +9,14 @@ TODO: Write a description here
 3. `cd` into the repo
 4. `shards build`
 
+## Docker
+
+You can also use the Docker image:
+
+```bash
+docker run -it --rm neuralegion/urlscan --url https://www.google.com --method GET
+```
+
 ## Usage
 
 Simple example:
@@ -34,7 +42,6 @@ Usage: urlscan [arguments]
     -H HEADER, --header=HEADER       Header to send (NAME:VALUE)
     -h, --help
 ```
-
 
 ## Contributing
 
