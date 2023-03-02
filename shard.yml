@@ -1,0 +1,17 @@
+name: urlscan
+version: 0.1.0
+
+authors:
+  - Bar Hofesh <bar.hofesh@gmail.com>
+
+targets:
+  urlscan:
+    main: src/urlscan.cr
+
+dependencies:
+  har:
+    github: NeuraLegion/har
+
+crystal: 1.7.2
+
+license: MIT
